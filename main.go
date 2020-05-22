@@ -39,13 +39,19 @@ type Razrade struct {
 	Ponude []int    `json:"ponude"`
 }
 
-func (lraz *Razrade) StringRAZRADE() string {
+func (l *Razrade) StringRAZRADE() string {
 	return fmt.Sprintf("")
 }
 
 type Tipovi struct {
 	Naziv string `json:"naziv"`
 }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+type masPonuda struct[
+	masterPonude []struct 
+]
 
 type masterPonude []struct {
 	Broj          string     `json:"broj"`
@@ -56,13 +62,16 @@ type masterPonude []struct {
 	TvKanal       string     `json:"tv_kanal,omitempty"`
 	ImaStatistiku bool       `json:"ima_statistiku,omitempty"`
 }
-
-/*func (m *[]masterPonude) masPonude() string {
-
+func (m *masPonuda) Ponude() string {
+	var ponude masterPonude
+	str := ""
+	for _, p := range ponude {
+		str += p.ponude
+	}
 	return fmt.Sprintf("Ponude: [%v]", str)
-}*/
+}
 
-func (p *[]masterPonude) StringPONUDE() string {
+func (p *masterPonude) StringPONUDE() string {
 	str := ""
 	for _, f := range p.Tecajevi {
 		str += fmt.Sprintf("Tečajevi: ", f.StringTECAJI())
@@ -70,6 +79,8 @@ func (p *[]masterPonude) StringPONUDE() string {
 	return fmt.Sprintf("Ponude: [%v]", str)
 }
 
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 type Tecajevi struct {
 	Tecaj float64 `json:"tecaj"`
 	Naziv string  `json:"naziv"`
@@ -101,7 +112,7 @@ func main() {
 	fmt.Println("main PONUDE:\n")
 	fmt.Println(dPonude)
 	fmt.Println("stringer za PONUDE:\n")
-	fmt.Println(dPonude.StringPONUDE())
+	fmt.Println(dPonude.Ponude())
 }
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
