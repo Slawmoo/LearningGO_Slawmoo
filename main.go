@@ -48,7 +48,6 @@ type Tipovi struct {
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 type masPonuda struct[
 	masterPonude []struct 
 ]
@@ -78,7 +77,6 @@ func (p *masterPonude) StringPONUDE() string {
 	}
 	return fmt.Sprintf("Ponude: [%v]", str)
 }
-
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 type Tecajevi struct {
