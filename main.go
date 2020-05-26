@@ -121,7 +121,7 @@ func getJSON(url string, target interface{}) error {
 }
 func main() {
 	var dLige masterLige
-	var dPonude masterPonude
+	var dPonude []slavePonude
 
 	fmt.Println("ziv sams")
 	err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
@@ -139,5 +139,5 @@ func main() {
 	fmt.Println("main PONUDE:\n")
 	fmt.Println(dPonude)
 	fmt.Println("stringer za PONUDE:\n")
-	fmt.Println(dPonude.Ponude())
+	// fmt.Println(dPonude.Ponude())
 }
