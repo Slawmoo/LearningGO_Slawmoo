@@ -29,7 +29,7 @@ type Lige struct {
 func (l *Lige) StringLIGE() string {
 	str := ""
 	for _, r := range l.Razrade {
-		str += fmt.Sprintf("Razrade: [%v]", r.StringRAZRADE())
+		str += fmt.Sprintf("Razrade(glavno): [%v]", r.StringRAZRADE())
 	}
 	return fmt.Sprintf("naziv: %v, razrade [%v]", l.Naziv, str)
 }
@@ -46,13 +46,12 @@ func (l *Razrade) StringRAZRADE() string {
 type Tipovi struct {
 	Naziv string `json:"naziv"`
 }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-type masPonuda struct[
-	masterPonude []struct 
-]
-
-type masterPonude []struct {
+type masterPonude struct {
+	id          int
+	slavePonude []slavePonude
+}
+type slavePonude struct {
 	Broj          string     `json:"broj"`
 	id            int        `json:"id"`
 	Naziv         string     `json:"naziv"`
@@ -61,58 +60,44 @@ type masterPonude []struct {
 	TvKanal       string     `json:"tv_kanal,omitempty"`
 	ImaStatistiku bool       `json:"ima_statistiku,omitempty"`
 }
-func (m *masPonuda) Ponude() string {
-	var ponude masterPonude
+
+func (s *slavePonude) NazivPonude() string { // samo dodavanje imena ponude
 	str := ""
-	for _, p := range ponude {
-		str += p.ponude
+	str += fmt.Sprintf("Ime ponude: [%v]", s.Naziv)
+	return str
+}
+func (m *masterPonude) Ponude() string {
+	var masPon masterPonude
+	str := ""
+	for _, f := range masPon.slavePonude {
+		str += fmt.Sprintf("Naziv ponude: [%v] ,Tečaj: [%v]", f.NazivPonude(), f.StringPONUDE()) // vanjski tecajevi
 	}
-	return fmt.Sprintf("Ponude: [%v]", str)
+	return str
+}
+func (s *slavePonude) StringPONUDE() string {
+	var slvPon slavePonude
+	str := ""
+	for _, i := range s.Tecajevi {
+		str += fmt.Sprintf("%v. tecaj: [%v]", i, slvPon.StringTECAJI()) //unutarnji tecajevi
+	}
+	return fmt.Sprintf("2. po redu tečajevi: [%v]", str)
 }
 
-func (p *masterPonude) StringPONUDE() string {
-	str := ""
-	for _, f := range p.Tecajevi {
-		str += fmt.Sprintf("Tečajevi: ", f.StringTECAJI())
-	}
-	return fmt.Sprintf("Ponude: [%v]", str)
-}
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 type Tecajevi struct {
 	Tecaj float64 `json:"tecaj"`
 	Naziv string  `json:"naziv"`
 }
 
-func (t *Tecajevi) StringTECAJI() string {
-	str := ""
-	str += fmt.Sprintf("Tečaj: %v", t.Tecaj)
-	return fmt.Sprintf("Ime tecaja: [%v], razrade [%v]", t.Naziv, str)
+func (s *slavePonude) StringTECAJI() string {
+	for f, j := range s.Tecajevi {
+		if f == 1 {
+			return fmt.Sprintf("Ime 2. tecaja: [%v], 2-tečaj (vrijednost) : [%v]", j.Naziv, j.Tecaj) // vadenje tecaja
+		}
+	}
+	return ""
 }
 
-func main() {
-	var dLige masterLige
-	var dPonude masterPonude
-
-	fmt.Println("ziv sams")
-	err := getJSON("https://minus5-dev-test.s3.eu-central-1.amazonaws.com/lige.json", &dLige)
-	if err != nil {
-		fmt.Println(err)
-	}
-	err1 := getJSON("https://minus5-dev-test.s3.eu-central-1.amazonaws.com/ponude.json", &dPonude)
-	if err1 != nil {
-		fmt.Println(err1)
-	}
-	fmt.Println("main LIGE:\n")
-	fmt.Println(dLige)
-	fmt.Println("stringer za LIGE:\n")
-	fmt.Println(dLige.StringMASLige())
-	fmt.Println("main PONUDE:\n")
-	fmt.Println(dPonude)
-	fmt.Println("stringer za PONUDE:\n")
-	fmt.Println(dPonude.Ponude())
-}
-
+// zelim ispisat sve nazive ponude, 2. po redu - tecaj(broj) i naziv tecaja
 var myClient = &http.Client{Timeout: 10 * time.Second}
 
 func getJSON(url string, target interface{}) error {
@@ -134,15 +119,25 @@ func getJSON(url string, target interface{}) error {
 	}
 	return nil
 }
+func main() {
+	var dLige masterLige
+	var dPonude masterPonude
 
-/*
-	getJSON("https://www.dropbox.com/s/wr9vnmt5e1jhwkq/ponude.json?dl=0", dataPonude) // getting data and populating structs
-	lige.json = https://www.dropbox.com/s/2kqweiiqf6nbhfz/lige.json?dl=0
- 	ponude.json = https://www.dropbox.com/s/wr9vnmt5e1jhwkq/ponude.json?dl=0
-	dataLige := new(GlLige)
-		dataPonude := new(GlPonude) // structs in variabs
-
-
-	   https://minus5-dev-test.s3.eu-central-1.amazonaws.com/lige.json
-	   https://minus5-dev-test.s3.eu-central-1.amazonaws.com/ponude.json
-*/
+	fmt.Println("ziv sams")
+	err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err1 := getJSON("https://www.aeternus.hr/go/ponude.json", &dPonude)
+	if err1 != nil {
+		fmt.Println(err1)
+	}
+	fmt.Println("main LIGE:\n")
+	fmt.Println(dLige)
+	fmt.Println("stringer za LIGE:\n")
+	fmt.Println(dLige.StringMASLige() + "\n\n\n\n")
+	fmt.Println("main PONUDE:\n")
+	fmt.Println(dPonude)
+	fmt.Println("stringer za PONUDE:\n")
+	fmt.Println(dPonude.Ponude())
+}
