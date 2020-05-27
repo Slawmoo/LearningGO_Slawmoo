@@ -1,3 +1,18 @@
+
+Zadatak 002 - Rad s fileovima (2020-05-27)
+
+Napraviti log file, tj text file imena log.log u koji se ispisuje sve sto aplikacija treba ispisati. Standardizirati svaki zapis s 3 elementa da izgleda ovako:
+
+{DATETIME} -- {LEVEL} -- {log zapis}
+
+Gdje je DATETIME  datum i vrijeme u formatu: YYYY-MM-DD hh:mm:ss
+LEVEL - tip loga, npr: Error, info, ...
+
+
+Iz filea players.csv ucitati podatke u memoriju (strukturu) i ispisati ih u log ponovno koristeći stringere.
+
+
+
 Zadatak 001
 
 Osnova aplikacije

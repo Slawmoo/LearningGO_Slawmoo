@@ -1,0 +1,11 @@
+ID;FirstName;LastName;Email;Tip;Status;Saldo;Country;PhoneNumber
+1;Andrej;Plenkovi_;ap@vlada.hr;;suspended;100;Hrvatska;
+2;Zoran;Milanovi_;zoki@predsjednik.hr;;active;1;Hrvatska;38598123456789
+3;Bo_idar;Petrov;bo@oporba.hr;test;active;100000;Hrvatska;9876543221
+4;Donald;Trump;dt@masterofuniverse.un;;active;555;UnitedStates;012345678987654
+5;Marko;Perkovi_ Thompson;mpt@pjevaci.hr;;active;444;Hrvatska;00385951234567
+6;Vili;Bero_;vb@korona.hr;;active;333;Hrvatska;09813579864
+7;Nicolas;Sarcozy;ns@paris.eu;;active;888;France;
+8;Nikola;Vu_i_;nv@vlada.sr;;pasive;777;Serbia;0038166554433
+9;Vilim;Ribic;vr@sindikati.hr;;active;111;Hrvatska;098445566
+10;Miroslav;_koro;miro@pjevaci.hr;;active;999;Hrvatska;098776655
