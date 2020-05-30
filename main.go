@@ -1,12 +1,16 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/gocarina/gocsv"
 )
 
 type masterLige struct {
@@ -118,26 +122,141 @@ func getJSON(url string, target interface{}) error {
 	}
 	return nil
 }
-func main() {
-	var dLige masterLige
-	var dPonude []slavePonude
-	var posPonude masterPonude
-
-	fmt.Println("ziv sams")
-	err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
+func writeLog(txt string) {
+	f, err := os.OpenFile("log.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-	err1 := getJSON("https://www.aeternus.hr/go/ponude.json", &dPonude)
-	if err1 != nil {
-		fmt.Println(err1)
+	defer f.Close()
+	currentTime := time.Now()
+	date := currentTime.Format("2006-01-02 15:04:05")
+	if _, err := f.WriteString(date + " -- " + "info" + " -- " + txt + "\n"); err != nil {
+		log.Printf("%v -- Error -- %v", date, err)
 	}
-	fmt.Println("main LIGE:\n")
-	fmt.Println(dLige)
-	fmt.Println("stringer za LIGE:\n")
-	fmt.Println(dLige.StringMASLige() + "\n\n\n\n")
-	fmt.Println("main PONUDE:\n")
-	fmt.Println(dPonude)
-	fmt.Println("stringer za PONUDE:\n")
-	fmt.Println(posPonude.Ponude())
+}
+
+func ReadCsv(filename string) ([][]string, error) {
+
+	// Open CSV file
+	f, err := os.Open(filename)
+	if err != nil {
+		return [][]string{}, err
+	}
+	defer f.Close()
+
+	// Read File into a Variable
+	lines, err := csv.NewReader(f).ReadAll()
+	if err != nil {
+		return [][]string{}, err
+	}
+
+	return lines, nil
+}
+
+type MAScsvPlayers struct {
+	sliceCVSply []CsvPlayer
+}
+type CsvPlayer struct {
+	ID          int
+	FrName      string
+	LaName      string
+	Email       string
+	Tip         string
+	Status      string
+	Saldo       int
+	Country     string
+	PhoneNumber int64
+}
+
+func inStruct() {
+	in, err := os.Open("players.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	players := []*CsvPlayer{}
+
+	if err := gocsv.UnmarshalFile(in, &players); err != nil {
+		panic(err)
+	}
+	for _, Ply := range players {
+		fmt.Println("Hello, ", ply.ID)
+	}
+}
+
+/*
+func CsvInStruct() {
+	log.Println("\n\n\n")
+	in, err := os.Open("players.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	ply := []*CsvPlayers{}
+
+	if err := gocsv.UnmarshalFile(in, &ply); err != nil {
+		panic(err)
+	} else {
+		fmt.Printf("%v", ply)
+		for _, p := range ply {
+			s := strconv.Itoa(p.ID) + " " + p.FrName + " " + p.LaName + " " + p.Email + " " + p.Tip + " " + p.Status + " " + strconv.Itoa(p.Saldo) + " " + p.Country + " " + strconv.FormatInt(p.PhoneNumber, 10)
+			writeLog(s)
+		}
+	}
+}
+*/
+/*
+func CsvInCode(filePath string) {
+	// Load a csv file.
+	f, _ := os.Open(filePath)
+
+	// Create a new reader.
+	r := csv.NewReader(f)
+	for {
+		record, err := r.Read()
+		// Stop at EOF.
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			panic(err)
+		}
+		// Display record.
+		// ... Display record length.
+		// ... Display all individual elements of the slice.
+		//fmt.Println(record)
+		for value := range record {
+			fmt.Printf("  %v\n", record[value])
+		}
+	}
+}*/
+func main() {
+	/*
+		var dLige masterLige
+		var dPonude []slavePonude
+		var posPonude masterPonude
+
+		fmt.Println("ziv sams")
+		err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err1 := getJSON("https://www.aeternus.hr/go/ponude.json", &dPonude)
+		if err1 != nil {
+			fmt.Println(err1)
+		}
+		fmt.Println("main LIGE:\n")
+		fmt.Println(dLige)
+		fmt.Println("stringer za LIGE:\n")
+		fmt.Println(dLige.StringMASLige() + "\n\n\n\n")
+		fmt.Println("main PONUDE:\n")
+		fmt.Println(dPonude)
+		fmt.Println("stringer za PONUDE:\n")
+		fmt.Println(posPonude.Ponude())
+	*/
+	CsvInCode("players.csv")
+
 }
