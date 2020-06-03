@@ -1,20 +1,12 @@
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:10 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
-2020-05-30 01:56:54 -- info -- 0      0  0
+
+2020-06-03 20:10:42  --  info  --  ID FirstName LastName Email Tip Status Saldo Country PhoneNumber
+2020-06-03 20:10:42  --  info  --  1 Andrej Plenkovi_ ap@vlada.hr  suspended 100 Hrvatska 
+2020-06-03 20:10:42  --  info  --  2 Zoran Milanovi_ zoki@predsjednik.hr  active 1 Hrvatska 38598123456789
+2020-06-03 20:10:42  --  info  --  3 Bo_idar Petrov bo@oporba.hr test active 100000 Hrvatska 9876543221
+2020-06-03 20:10:42  --  info  --  4 Donald Trump dt@masterofuniverse.un  active 555 UnitedStates 012345678987654
+2020-06-03 20:10:42  --  info  --  5 Marko Perkovi_ Thompson mpt@pjevaci.hr  active 444 Hrvatska 00385951234567
+2020-06-03 20:10:42  --  info  --  6 Vili Beros vb@korona.hr  active 333 Hrvatska 09813579864
+2020-06-03 20:10:42  --  info  --  7 Nicolas Sarcozy ns@paris.eu  active 888 France 
+2020-06-03 20:10:42  --  info  --  8 Nikola Vucic nv@vlada.sr  pasive 777 Serbia 0038166554433
+2020-06-03 20:10:42  --  info  --  9 Vilim Ribic vr@sindikati.hr  active 111 Hrvatska 098445566
+2020-06-03 20:10:42  --  info  --  10 Miroslav skoro miro@pjevaci.hr  active 999 Hrvatska 098776655
