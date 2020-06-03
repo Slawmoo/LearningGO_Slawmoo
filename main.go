@@ -125,8 +125,16 @@ type SLCCsvPlayer struct {
 	CsvPlayer []CsvPlayer
 }
 
+func (p *SLCCsvPlayer) String() string {
+	str := "["
+	for _, ply := range p.CsvPlayer {
+		str += ply.String() + "; "
+	}
+	return str + "]"
+}
+
 type CsvPlayer struct {
-	ID          string `json:ID`
+	ID          string `json:id`
 	FrName      string `json:"firstname"`
 	LaName      string `json:"lastname"`
 	Email       string `json:"email"`
@@ -135,6 +143,10 @@ type CsvPlayer struct {
 	Saldo       string `json:"saldo"`
 	Country     string `json:"country"`
 	PhoneNumber string `json:"phonenumber"`
+}
+
+func (p *CsvPlayer) String() string {
+	return fmt.Sprintf("ID: %v,firstname: %v,lastname: %v,email: %v,tip: %v,status: %v,saldo: %v,country: %v,phonenumber: %v", p.ID, p.FrName, p.LaName, p.Email, p.Tip, p.Status, p.Saldo, p.Country, p.PhoneNumber)
 }
 
 func main() {
