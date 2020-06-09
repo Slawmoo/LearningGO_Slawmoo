@@ -32,9 +32,9 @@ type Lige struct {
 func (l *Lige) StringLIGE() string {
 	str := ""
 	for _, r := range l.Razrade {
-		str += fmt.Sprintf("Razrade(glavno): [%v]", r.StringRAZRADE())
+		str += fmt.Sprintf("Razrade(glavno): {{[%v]}}", r.StringRAZRADE())
 	}
-	return fmt.Sprintf("naziv: %v, razrade [%v]", l.Naziv, str)
+	return fmt.Sprintf(" {Naziv: %v, Razrade [%v]} ", l.Naziv, str)
 }
 
 type Razrade struct {
@@ -43,7 +43,14 @@ type Razrade struct {
 }
 
 func (l *Razrade) StringRAZRADE() string {
-	return fmt.Sprintf("")
+	str := ""
+	for _, m := range l.Tipovi {
+		str += fmt.Sprintf("Tip: [%v], ", m.Naziv)
+	}
+	for _, m := range l.Ponude {
+		str += fmt.Sprintf("Ponuda: [%v]", m)
+	}
+	return str
 }
 
 type Tipovi struct {
@@ -63,40 +70,24 @@ type slavePonude struct {
 	ImaStatistiku bool       `json:"ima_statistiku,omitempty"`
 }
 
-func (s *slavePonude) NazivPonude() string { // samo dodavanje imena ponude
+func (m *masterPonude) svePonude() string {
 	str := ""
-	str += fmt.Sprintf("Ime ponude: [%v]", s.Naziv)
-	return str
-}
-func (m *masterPonude) Ponude() string {
-	var masPon masterPonude
-	str := ""
-	for _, f := range masPon.slavePonude {
-		str += fmt.Sprintf("Naziv ponude: [%v] ,Tečaj: [%v]", f.NazivPonude(), f.StringPONUDE()) // vanjski tecajevi
+	for _, f := range m.slavePonude {
+		str += fmt.Sprintf("Broj: [%v], id: [%v], naziv: [%v], Vrijeme: [%v], Tecajevi: [%v],TvKanal: [%v], ImaStatistiku: [%v]", f.Broj, f.id, f.Naziv, f.Vrijeme, f.stringTecajevi(), f.TvKanal, f.ImaStatistiku) // vanjski tecajevi
 	}
 	return str
 }
-func (s *slavePonude) StringPONUDE() string {
-	var slvPon slavePonude
+func (s *slavePonude) stringTecajevi() string {
 	str := ""
 	for _, i := range s.Tecajevi {
-		str += fmt.Sprintf("%v. tecaj: [%v]", i, slvPon.StringTECAJI()) //unutarnji tecajevi
+		str += fmt.Sprintf("[ Naziv tecaja: %v, tecaj: %v ]", i.Naziv, i.Tecaj)
 	}
-	return fmt.Sprintf("2. po redu tečajevi: [%v]", str)
+	return str
 }
 
 type Tecajevi struct {
 	Tecaj float64 `json:"tecaj"`
 	Naziv string  `json:"naziv"`
-}
-
-func (s *slavePonude) StringTECAJI() string {
-	for f, j := range s.Tecajevi {
-		if f == 1 {
-			return fmt.Sprintf("Ime 2. tecaja: [%v], 2-tečaj (vrijednost) : [%v]", j.Naziv, j.Tecaj) // vadenje tecaja
-		}
-	}
-	return ""
 }
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
@@ -121,58 +112,29 @@ func getJSON(url string, target interface{}) error {
 	return nil
 }
 
-type SLCCsvPlayer struct {
-	CsvPlayer []CsvPlayer
-}
-
-func (p *SLCCsvPlayer) String() string {
-	str := "["
-	for _, ply := range p.CsvPlayer {
-		str += ply.String() + "; "
-	}
-	return str + "]"
-}
-
-type CsvPlayer struct {
-	ID          string `json:id`
-	FrName      string `json:"firstname"`
-	LaName      string `json:"lastname"`
-	Email       string `json:"email"`
-	Tip         string `json:"tip"`
-	Status      string `json:"status"`
-	Saldo       string `json:"saldo"`
-	Country     string `json:"country"`
-	PhoneNumber string `json:"phonenumber"`
-}
-
-func (p *CsvPlayer) String() string {
-	return fmt.Sprintf("ID: %v,firstname: %v,lastname: %v,email: %v,tip: %v,status: %v,saldo: %v,country: %v,phonenumber: %v", p.ID, p.FrName, p.LaName, p.Email, p.Tip, p.Status, p.Saldo, p.Country, p.PhoneNumber)
-}
-
 func main() {
-	/*
-		var dLige masterLige
-		var dPonude []slavePonude
-		var posPonude masterPonude
 
-		fmt.Println("ziv sams")
-		err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
-		if err != nil {
-			fmt.Println(err)
-		}
-		err1 := getJSON("https://www.aeternus.hr/go/ponude.json", &dPonude)
-		if err1 != nil {
-			fmt.Println(err1)
-		}
-		fmt.Println("main LIGE:\n")
-		fmt.Println(dLige)
-		fmt.Println("stringer za LIGE:\n")
-		fmt.Println(dLige.StringMASLige() + "\n\n\n\n")
-		fmt.Println("main PONUDE:\n")
-		fmt.Println(dPonude)
-		fmt.Println("stringer za PONUDE:\n")
-		fmt.Println(posPonude.Ponude())
-	*/
+	var dLige masterLige
+	var dPonude []slavePonude
+	var svePonude masterPonude
+
+	fmt.Println("ziv sams")
+	err := getJSON("https://www.aeternus.hr/go/lige.json", &dLige)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err1 := getJSON("https://www.aeternus.hr/go/ponude.json", &dPonude)
+	if err1 != nil {
+		fmt.Println(err1)
+	}
+	fmt.Println("main LIGE:\n")
+	fmt.Println(dLige)
+	fmt.Println("Sve LIGE (stringer):\n")
+	fmt.Println(dLige.StringMASLige() + "\n\n")
+	fmt.Println("main PONUDE:\n")
+	fmt.Println(dPonude)
+	fmt.Println("Sve PONUDE (stringer):\n\n\n")
+	fmt.Println(svePonude.svePonude())
 	csvFile, err1 := os.Open("players.csv")
 	errChk("opening", err1)
 	defer csvFile.Close()
@@ -201,49 +163,75 @@ func main() {
 	//playersJson, err3 := json.Marshal(players)
 	//errChk("out", err3)
 	fmt.Println(players)
-	fmt.Println("\n")
 	f, err := os.OpenFile("log.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 	defer f.Close()
-	log.SetFlags(0)
-	log.SetOutput(new(logWriter))
+
 	log.SetOutput(f)
 	plyLog(players)
-	// plyLogStringer()
+	var csvPlayer SLCCsvPlayer
+	fmt.Print("\n\n DOLJE DODIN\n\n")
+	fmt.Println(csvPlayer.String())
+}
+
+type SLCCsvPlayer struct {
+	CsvPlayer []CsvPlayer
+}
+
+type CsvPlayer struct {
+	ID          string `json:id`
+	FrName      string `json:"firstname"`
+	LaName      string `json:"lastname"`
+	Email       string `json:"email"`
+	Tip         string `json:"tip"`
+	Status      string `json:"status"`
+	Saldo       string `json:"saldo"`
+	Country     string `json:"country"`
+	PhoneNumber string `json:"phonenumber"`
+}
+
+func (p *SLCCsvPlayer) String() string {
+	str := ""
+	for _, r := range p.CsvPlayer {
+		currentTime := time.Now()
+		date := currentTime.Format("2006-01-02 15:04:05")
+		str += date + "  --  info  --  ID: " + r.ID + ", firstname: " + r.FrName + ", lastname: " + r.LaName + ", email: " + r.Email + ", tip: " + r.Tip + ", status: " + r.Status + ", saldo: " + r.Saldo + ", country: " + r.Country + ", phonenumber: " + r.PhoneNumber + "\n"
+	}
+	return str
 }
 
 func plyLog(ply []CsvPlayer) {
+	re := ""
 	for _, p := range ply {
 		s := p.ID + " " + p.FrName + " " + p.LaName + " " + p.Email + " " + p.Tip + " " + p.Status + " " + p.Saldo + " " + p.Country + " " + p.PhoneNumber
 		currentTime := time.Now()
 		date := currentTime.Format("2006-01-02 15:04:05")
-		log.Printf("%v  --  info  --  %v\n", date, s)
+		re += date + "  --  info  --  " + s + "\n"
+		//treba ispisat u file pomocu fmt. paketa, sutra cemo
 	}
+
 }
-func (c *SLCCsvPlayer) plyLogStringer() {
-	for _, p := range c.CsvPlayer {
+func (p *SLCCsvPlayer) plyLogStringer() string {
+	re := ""
+	for _, p := range p.CsvPlayer {
 		s := p.ID + " " + p.FrName + " " + p.LaName + " " + p.Email + " " + p.Tip + " " + p.Status + " " + p.Saldo + " " + p.Country + " " + p.PhoneNumber
 		currentTime := time.Now()
 		date := currentTime.Format("2006-01-02 15:04:05")
-		log.Printf("%v  --  info  --  %v\n", date, s)
+		re += date + "  --  info  --  " + s + "\n"
+		//treba ispisat u file pomocu fmt. paketa, sutra cemo
 	}
+	return re
 }
 
 func errChk(msg string, err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 		fmt.Println(msg)
 	}
 }
 
-// LOG TIME FORMAT
-type logWriter struct {
-}
-
-func (writer logWriter) Write(bytes []byte) (int, error) {
-	return fmt.Print(time.Now().UTC().Format("2006-01-02 15:04:05") + string(bytes) + "\n")
-}
-
-//--------------------------------------
+/* treba rjesit sve ponude preko stringera ispis - eventualno pitat dodu
+trea rjesiz ispis players u .log file
+rjesit sta ne valja*/
